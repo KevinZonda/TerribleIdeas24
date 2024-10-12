@@ -7,18 +7,24 @@ import wave
 import io
 from pydub import AudioSegment
 import scipy
+from transformers import pipeline
+from datasets import load_dataset
+import soundfile as sf
+import torch
 
 app = Flask(__name__)
 
 # Initialize the ASR pipeline
-synthesiser = pipeline("text-to-speech", model="suno/bark-small", device=0)
+synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts", device=0)
+embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+speaker_embedding = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
 # currently not configured to use gpu
 @app.route('/tts', methods=['POST'])
 def tts():
     # Parse the received audio data
     data: dict = request.get_json()
     text = data['text']  # required
-    speech = synthesiser(text, forward_params={"do_sample": True})
+    speech = synthesiser(text, forward_params={"speaker_embeddings": speaker_embedding})
     
     # Convert the audio to a byte stream
     byte_io = io.BytesIO()

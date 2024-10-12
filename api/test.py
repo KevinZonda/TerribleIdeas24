@@ -1,17 +1,14 @@
-from transformers import AutoProcessor, AutoModel
-import scipy
+from transformers import pipeline
+from datasets import load_dataset
+import soundfile as sf
+import torch
 
-processor = AutoProcessor.from_pretrained("suno/bark-small")
-model = AutoModel.from_pretrained("suno/bark-small")
+synthesiser = pipeline("text-to-speech", "microsoft/speecht5_tts")
 
-inputs = processor(
-    text=["Hello, my name is Suno. And, uh — and I like pizza. [laughs] But I also have other interests such as playing tic tac toe."],
-    return_tensors="pt",
-)
+embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+speaker_embedding = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+# You can replace this embedding with your own as well.
 
-speech_values = model.generate(**inputs, do_sample=True)
+speech = synthesiser("Hello, my dog is cooler than you!", forward_params={"speaker_embeddings": speaker_embedding})
 
-
-sampling_rate = model.config.sample_rate
-scipy.io.wavfile.write("bark_out.wav", rate=sampling_rate, data=speech_values.cpu().numpy().squeeze())
-
+sf.write("speech.wav", speech["audio"], samplerate=speech["sampling_rate"])
