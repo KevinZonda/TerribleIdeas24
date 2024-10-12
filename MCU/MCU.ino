@@ -5,9 +5,10 @@
 #define PIN_LED 12
 #define PIN_BTN_IN 22
 
+#define PIN_SG90 13
+
 btn * btn_in;
 
-#define PIN_SG90 13 // Output pin used
 Servo sg90;
 
 bool is_on = false;
