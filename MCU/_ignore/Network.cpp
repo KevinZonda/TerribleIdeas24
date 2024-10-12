@@ -31,18 +31,18 @@ void scan_wifi() {
 }
 
 connection_counter * init_connection_counter() {
-    connection_counter *ptr = malloc(sizeof(connection_counter));
+    connection_counter *ptr = (connection_counter *) malloc(sizeof(connection_counter));
     ptr->ctr = 0;
     return ptr;
 }
 
 const char* ssid = "REPLACE_WITH_YOUR_SSID";
 const char* password = "REPLACE_WITH_YOUR_PASSWORD";
-void connwct_wifi(connection_counter * ctr) {
+void connwct_wifi(connection_counter * ptr) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     Serial.print("Connecting to WiFi ..");
-    while (WiFi.status() != WL_CONNECTED && connection_counter->ctr <= 5) {
+    while (WiFi.status() != WL_CONNECTED && ptr->ctr <= 5) {
         Serial.print('.');
         delay(1000);
     }
