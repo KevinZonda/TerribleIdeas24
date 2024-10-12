@@ -3,6 +3,11 @@ from streamlit_mic_recorder import mic_recorder
 import base64
 import requests
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+from api.llm import gpt_response
+
 st.set_page_config(
     page_title="Terrible Ideas - I's Shaking",
     page_icon="👀",
@@ -103,17 +108,21 @@ with st.container():
         if st.button("Send Audio"):
             asr_resp = send_audio_for_asr(st.session_state.audio)
             st.session_state["chat_history"].append(
-                {"role": "assistant", "content": asr_resp["text"]}
+                {"role": "user", "content": asr_resp["text"]}
             )
 
-            # TODO: LLM reply
+            # LLM reply
+            prompt, gpt_resp = gpt_response(asr_resp["text"])
 
-            tts_resp = send_text_for_tts(asr_resp["text"])
+            tts_resp = send_text_for_tts(gpt_resp)
 
             audio = decode_audio_from_tts(tts_resp["audio"])
             st.audio(audio, format="audio/wav")
             # bot_resp = send_audio_to_bot(audio)
 
+            st.session_state["chat_history"].append(
+                {"role": "assistant", "content": gpt_resp}
+            )
             # resp: {prompt, response}
             # st.write(resp)
             # st.session_state["chat_history"].append(
