@@ -6,6 +6,8 @@
 #define PIN_BTN_IN 15
 #define PIN_SG90 13 // Output pin used
 
+#define PIN_SG90 13
+
 btn * btn_in;
 
 Servo sg90;
