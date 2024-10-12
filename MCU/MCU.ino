@@ -7,6 +7,7 @@
 #define PIN_SG90 13 // Output pin used
 
 #define PIN_SG90 13
+#define SERVO_DETECT_SPLIT 200
 
 btn * btn_in;
 
@@ -22,16 +23,38 @@ void setup() {
   sg90.attach(PIN_SG90); // Minimum and maximum pulse width (in µs) to go from 0° to 180
 }
 
-void loop() {
+
+void _read_btn() {
   if (btn_scan(btn_in)) {
     is_on = !is_on;
   }
+  if (!is_on) {
+    sg.write(0);
+  }
+}
+
+// ret needExit
+bool _delay_with_read_btn() {
+  for (int i = 0; i < SERVO_DETECT_SPLIT; ++i) {
+      _read_btn()
+      if (!is_on) return true;
+  }
+  return false;
+}
+
+void loop() {
+  _read_btn()
   Serial.println(is_on ? "btn_scanT" : "btn_scanF");
 
   if (is_on) {
     sg90.write(90);
-    delay(500);
+    if (_delay_with_read_btn()) {
+      return;
+    }
+
     sg90.write(-90);
-    delay(500);
+    if (_delay_with_read_btn()) {
+      return;
+    }
   }
 }
