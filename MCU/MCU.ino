@@ -4,11 +4,6 @@
 
 #define PIN_SG90 13 // Output pin used
 Servo sg90;
-#include <ESP32Servo.h>
-
-
-#define PIN_SG90 13 // Output pin used
-Servo sg90;
 
 void setup() {
   sg90.setPeriodHertz(50); // PWM frequency for SG90
