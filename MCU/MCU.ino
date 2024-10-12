@@ -3,11 +3,11 @@
 #include "btn.h"
 
 #define PIN_LED 12
-#define PIN_BTN_IN 22
+#define PIN_BTN_IN 15
+#define PIN_SG90 13 // Output pin used
 
 btn * btn_in;
 
-#define PIN_SG90 13 // Output pin used
 Servo sg90;
 
 bool is_on = false;
@@ -20,16 +20,14 @@ void setup() {
 }
 
 void loop() {
-  sg90.write(90);
-  delay(500);
-  sg90.write(-90);
-  delay(500);
-  digitalWrite(PIN_LED, HIGH);
-  sleep(1000);
-  digitalWrite(PIN_LED, LOW);
-  sleep(1000);
-
   if (btn_scan(btn_in)) {
     is_on = !is_on;
+  }
+
+  if (is_on) {
+    sg90.write(90);
+    delay(500);
+    sg90.write(-90);
+    delay(500);
   }
 }
