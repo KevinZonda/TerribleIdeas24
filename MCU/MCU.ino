@@ -23,6 +23,7 @@ void loop() {
   if (btn_scan(btn_in)) {
     is_on = !is_on;
   }
+  Serial.println(is_on ? "btn_scanT" : "btn_scanF");
 
   if (is_on) {
     sg90.write(90);
