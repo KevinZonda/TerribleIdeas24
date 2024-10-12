@@ -16,7 +16,7 @@ team I's Shaking (TBC)
 - Software
     - API
         - [x] ASR
-        - [ ] TTS
+        - [x] TTS
         - [ ] OpenAI
     - Scripts
         1. [ ] Receive Audio from I
