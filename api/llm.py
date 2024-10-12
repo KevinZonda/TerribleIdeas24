@@ -2,9 +2,15 @@ from openai import OpenAI
 import os
 import json
 
+# dot env
+from dotenv import load_dotenv
 
-openai_api_key = os.environ.get("GPT")
-prompts_path = "api/prompts.json"
+load_dotenv()
+
+
+openai_api_key = os.environ.get("GPT_T")
+project_root = os.path.dirname(os.path.dirname(__file__))  # terrible_ideas
+prompts_path = os.path.join(project_root, "api/prompts.json")
 with open(prompts_path, "r", encoding='utf-8') as f:
     all_prompt_list = json.load(f)
 
