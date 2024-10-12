@@ -15,6 +15,7 @@ Servo sg90;
 bool is_on = false;
 
 void setup() {
+  Serial.begin(9600);
   pinMode(PIN_LED, OUTPUT);
   btn_in = btn_init(PIN_BTN_IN);
   sg90.setPeriodHertz(50); // PWM frequency for SG90
