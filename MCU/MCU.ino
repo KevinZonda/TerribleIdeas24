@@ -1,4 +1,4 @@
-#define PIN_LED D12
+#define PIN_LED 12
 
 void setup() {
   pinMode(PIN_LED, OUTPUT);
