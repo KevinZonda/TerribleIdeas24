@@ -49,9 +49,31 @@ if "audio" not in st.session_state:
     st.session_state.audio = None
 
 # def send_audio(audio_bytes, reply_method, prompt_suffix, send_to_stream, url="http://0.0.0.0:7861/asr"):
-def send_audio(audio_bytes, url="http://127.0.0.1:7861/asr"):
+def send_audio_for_asr(audio_bytes, url="http://127.0.0.1:7861/asr"):
     audio_bytes = base64.b64encode(audio_bytes).decode('utf-8')
     audio_data = {"bytes": audio_bytes}
+    response = requests.post(url, json=audio_data)
+    if response.status_code == 200:
+        print("Audio sent successful!")
+        return response.json()
+    else:
+        print(f"Failed to send audio. Status code: {response.status_code}")
+
+def send_text_for_tts(text, url="http://127.0.0.1:7862/tts"):
+    data = {"text": text}
+    response = requests.post(url, json=data)
+    if response.status_code == 200:
+        print("Text sent successful!")
+        return response.json()
+    else:
+        print(f"Failed to send text. Status code: {response.status_code}")
+
+def decode_audio_from_tts(audio_bytes):
+    return base64.b64decode(audio_bytes)
+
+def send_audio_to_bot(audio_bytes, url="http://0.0.0.0:11451/receive_audio"):  # TODO: change the URL
+    audio_bytes = base64.b64encode(audio_bytes).decode('utf-8')
+    audio_data = {"audio": audio_bytes}
     response = requests.post(url, json=audio_data)
     if response.status_code == 200:
         print("Audio sent successful!")
@@ -79,15 +101,25 @@ with st.container():
     if st.session_state.audio is not None:
         st.audio(st.session_state.audio, format="audio/wav")
         if st.button("Send Audio"):
-            resp = send_audio(st.session_state.audio)
+            asr_resp = send_audio_for_asr(st.session_state.audio)
+            st.session_state["chat_history"].append(
+                {"role": "assistant", "content": asr_resp["text"]}
+            )
+
+            # TODO: LLM reply
+
+            tts_resp = send_text_for_tts(asr_resp["text"])
+
+            audio = decode_audio_from_tts(tts_resp["audio"])
+            st.audio(audio, format="audio/wav")
+            # bot_resp = send_audio_to_bot(audio)
+
             # resp: {prompt, response}
             # st.write(resp)
             # st.session_state["chat_history"].append(
             #     {"role": "user", "content": resp["prompt"]}
             # )
-            st.session_state["chat_history"].append(
-                {"role": "assistant", "content": resp["text"]}
-            )
+            
 
 for ith_history in st.session_state["chat_history"]:
     with st.chat_message(name=ith_history["role"]):
