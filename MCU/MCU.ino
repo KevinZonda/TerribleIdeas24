@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <ESP32Servo.h>
+
 #include "btn.h"
 
 #define PIN_LED 12
@@ -7,7 +7,8 @@
 #define PIN_SG90 13 // Output pin used
 
 #define PIN_SG90 13
-#define SERVO_DETECT_SPLIT 200
+
+#define SERVO_DELAY_TIME 500
 
 btn * btn_in;
 
@@ -19,42 +20,47 @@ void setup() {
   Serial.begin(9600);
   pinMode(PIN_LED, OUTPUT);
   btn_in = btn_init(PIN_BTN_IN);
-  sg90.setPeriodHertz(50); // PWM frequency for SG90
-  sg90.attach(PIN_SG90); // Minimum and maximum pulse width (in µs) to go from 0° to 180
+  sg90.setPeriodHertz(50);
+  sg90.attach(PIN_SG90);
 }
 
 
-void _read_btn() {
+int _curtime = 0;
+int _servo_time = 0;
+unsigned long delay_start = 0;
+int _servo_next_action = 90;
+
+int servo_action_iter() {
+  int act = _servo_next_action;
+  _servo_next_action = - _servo_next_action;
+  return act;
+}
+
+
+void servo_next_state() {
+  sg.write(servo_action_iter());
+  _servo_time = millis();
+}
+
+
+void btn_servo_sync() {
+  if (_servo_time - _curtime >= SERVO_DELAY_TIME && is_on) {
+    servo_next_state();
+  }
   if (btn_scan(btn_in)) {
     is_on = !is_on;
+    if (is_on) {
+      servo_next_state();
+    } else {
+      sg.write(0);
+    }
+    
   }
-  if (!is_on) {
-    sg.write(0);
-  }
-}
-
-// ret needExit
-bool _delay_with_read_btn() {
-  for (int i = 0; i < SERVO_DETECT_SPLIT; ++i) {
-      _read_btn()
-      if (!is_on) return true;
-  }
-  return false;
+  
 }
 
 void loop() {
-  _read_btn()
-  Serial.println(is_on ? "btn_scanT" : "btn_scanF");
-
-  if (is_on) {
-    sg90.write(90);
-    if (_delay_with_read_btn()) {
-      return;
-    }
-
-    sg90.write(-90);
-    if (_delay_with_read_btn()) {
-      return;
-    }
-  }
+  _curtime = millis();
+  btn_servo_sync()
+  Serial.println(is_on ? "btn_scan_T" : "btn_scan_F");
 }
