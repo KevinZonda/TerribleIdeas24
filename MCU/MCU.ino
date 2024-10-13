@@ -4,8 +4,6 @@
 
 #define PIN_LED 12
 #define PIN_BTN_IN 15
-#define PIN_SG90 13 // Output pin used
-
 #define PIN_SG90 13
 
 #define SERVO_DELAY_TIME 500
