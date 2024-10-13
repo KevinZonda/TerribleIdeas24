@@ -22,8 +22,8 @@ void setup() {
 }
 
 
-int _curtime = 0;
-int _servo_time = 0;
+unsigned long _curtime = 0;
+unsigned long _servo_time = 0;
 unsigned long delay_start = 0;
 int _servo_next_action = 90;
 
@@ -35,21 +35,27 @@ int servo_action_iter() {
 
 
 void servo_next_state() {
-  sg.write(servo_action_iter());
+  sg90.write(servo_action_iter());
   _servo_time = millis();
 }
 
 
 void btn_servo_sync() {
-  if (_servo_time - _curtime >= SERVO_DELAY_TIME && is_on) {
-    servo_next_state();
+  bool is_changed = btn_scan(btn_in);
+  if (!is_changed) {
+      if (_servo_time - _curtime >= SERVO_DELAY_TIME && is_on) {
+        servo_next_state();
+    }
+    return;
   }
+
+
   if (btn_scan(btn_in)) {
     is_on = !is_on;
     if (is_on) {
       servo_next_state();
     } else {
-      sg.write(0);
+      sg90.write(0);
     }
     
   }
@@ -57,6 +63,6 @@ void btn_servo_sync() {
 
 void loop() {
   _curtime = millis();
-  btn_servo_sync()
+  btn_servo_sync();
   Serial.println(is_on ? "btn_scan_T" : "btn_scan_F");
 }
