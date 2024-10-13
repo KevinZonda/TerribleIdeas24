@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include <driver/dac.h>
 #include "btn.h"
 
 #define PIN_LED 12
 #define PIN_BTN_IN 15
 #define PIN_SG90 13
-#define PIN_SPEAKER 14
+// #define PIN_SPEAKER 25
 #define SERVO_DETECT_SPLIT 200
 
 btn * btn_in;
@@ -16,8 +17,6 @@ bool is_on = false;
 
 void setup() {
   Serial.begin(9600);
-  Serial2.begin(115200); //USB
-  pinMode(PIN_SPEAKER, OUTPUT);
   pinMode(PIN_LED, OUTPUT);
   btn_in = btn_init(PIN_BTN_IN);
   sg90.setPeriodHertz(50); // PWM frequency for SG90
@@ -43,20 +42,7 @@ bool _delay_with_read_btn() {
   return false;
 }
 
-void play_audio() {
-  if (Serial2.available() > 0) {
-    byte incoming_byte = Serial2.read();
-    // Output the audio byte as a digital signal
-    for (int i = 0; i < 8; i++) {  // Iterate through each bit of the byte
-      digitalWrite(PIN_SPEAKER, (incoming_byte & (1 << (7 - i))) ? HIGH : LOW);  // Set pin HIGH or LOW based on bit value
-      delayMicroseconds(125);  // Adjust this delay based on your audio sample rate
-    }
-  }
-}
-
 void loop() {
-  play_audio();
-
   _read_btn();
   Serial.println(is_on ? "btn_scanT" : "btn_scanF");
 

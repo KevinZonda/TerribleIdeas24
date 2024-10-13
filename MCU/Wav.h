@@ -1,6 +1,6 @@
 #include <driver/dac.h>
 
-const int dacPin = 25;  // DAC1, GPIO25 (you can also use GPIO26 for DAC2)
+const int dacPin = 14;  // DAC1, GPIO25 (you can also use GPIO26 for DAC2)
 const int bufferSize = 1024;
 uint8_t audioBuffer[bufferSize];
 
