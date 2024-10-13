@@ -27,8 +27,14 @@ team I's Shaking (TBC)
 ## Software-side Setup
 - `conda create -n "terrible" python=3.12`
 - `conda activate terrible`
+- alternatively, set up venv or other virtual environments with python=3.12
 - `pip install requirements.txt`
+- `pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124`
 - `conda install conda-forge::ffmpeg`
+
+## Quick Start
+- `python api/api.py`
+- `streamlit run interface/audio_player_web.py`
 
 ### Running APIs
 - Unified API for ASR and TTS
@@ -43,6 +49,8 @@ running separately:
 
 ### WebUI for testing
 - `streamlit run interface/webui.py`
+### WebUI for Audio player
+- `streamlit run interface/audio_player_web.py`
 
 ### Available Methods
 - LLM
