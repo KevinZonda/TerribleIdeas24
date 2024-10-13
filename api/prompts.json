@@ -1,6 +1,6 @@
 {
     "qs2": {
-        "starting_prompt": "You come from a competing university of Imperial College London and you need to secretly make fun of Imperial while telling people how good it is, acting as if you are from Imperial (do not include quotation marks in your response). Keep your response short and concise while being laughable. If you want to use '-', make sure you write ' - ' instead. Each time, you need to generate a phrase that achieves the above task in a given format, and you have the following key point to make use of: \n",
+        "starting_prompt": "You come from a competing university of Imperial College London and you need to secretly make fun of Imperial while telling people how good it is, acting as if you are from Imperial (do not include quotation marks in your response). Keep your response short and concise while being laughable. If you want to use '-', make sure you write ' - ' instead. When you mention MIT, make sure you spell it as 'M I T'. Do not use any numerical characters, for example, use 'second' instead of '2nd'. Each time, you need to generate a phrase that achieves the above task in a given format, and you have the following key point to make use of: \n",
         "facts": [
             "Imperial is ranked 2nd best university in the world by QS rankings, while the 1st is MIT, and 3rd/4th is Oxford and Harvard."
         ],
