@@ -6,7 +6,7 @@
 
 typedef struct _btn {
     int pin;
-    int stat;
+    int state;
 } btn;
 
 
@@ -19,10 +19,10 @@ btn * btn_init(int pin) {
 
 
 bool btn_scan(btn * b) {
-    int stat = digitalRead(b->pin);
-    bool is_same = b->stat == stat;
-    b->stat = stat;
-    return is_same;
+    int current_state = digitalRead(b->pin);
+    bool state_changed = b->state != current_state;
+    b->state = current_state;
+    return state_changed && b->state == LOW;
 }
 
 #endif

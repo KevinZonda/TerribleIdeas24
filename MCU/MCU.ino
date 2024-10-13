@@ -1,5 +1,4 @@
-#include <Arduino.h>
-
+#include <ESP32Servo.h>
 #include "btn.h"
 
 #define PIN_LED 12
@@ -54,7 +53,6 @@ void btn_servo_sync() {
     }
     
   }
-  
 }
 
 void loop() {
