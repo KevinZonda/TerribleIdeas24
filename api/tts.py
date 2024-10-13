@@ -34,7 +34,7 @@ def tts():
     # Encode the byte stream to base64
     encoded_audio = base64.b64encode(byte_io.read()).decode('utf-8')
     
-    return jsonify({"audio": encoded_audio})
+    return jsonify({"audio": encoded_audio, "sampling_rate": speech["sampling_rate"]})
 
 
 if __name__ == '__main__':
