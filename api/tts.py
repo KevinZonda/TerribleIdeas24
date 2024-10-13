@@ -14,11 +14,11 @@ import torch
 
 app = Flask(__name__)
 
-# Initialize the ASR pipeline
+# Initialize the TTS pipeline
 synthesiser = pipeline("text-to-speech", model="microsoft/speecht5_tts", device=0)
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
 speaker_embedding = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
-# currently not configured to use gpu
+
 @app.route('/tts', methods=['POST'])
 def tts():
     # Parse the received audio data

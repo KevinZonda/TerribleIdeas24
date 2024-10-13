@@ -20,7 +20,7 @@ team I's Shaking (TBC)
         - [x] OpenAI
     - Scripts
         1. [ ] Receive Audio from I
-        2. [ ] ASR to text, text to LLM, get reply, TTS to audio
+        2. [x] ASR to text, text to LLM, get reply, TTS to audio
         3. [ ] Send Audio Back to I
 
 
@@ -31,16 +31,18 @@ team I's Shaking (TBC)
 - `conda install conda-forge::ffmpeg`
 
 ### Running APIs
-`cd api`
+- Unified API for ASR and TTS
+    - `python api/api.py`
 
+running separately:
+`cd api`
 - ASR (audio to text)
     - `python asr.py`
 - TTS (text to audio)
     - `python tts.py`
 
 ### WebUI for testing
-- `cd interface`
-- `streamlit run webui.py`
+- `streamlit run interface/webui.py`
 
 ### Available Methods
 - LLM
